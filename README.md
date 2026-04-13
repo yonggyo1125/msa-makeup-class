@@ -12,9 +12,9 @@
 - 서비스 디스커버리
 - 서버 사이드 로드밸런서
 - 클라이언트 사이드 로드밸런서
-- Spring Cloud OpenFeign
 
 ## 3일차
+- Spring Cloud OpenFeign
 - Resilience4j
 - API 게이트웨이
 - 카프카1
