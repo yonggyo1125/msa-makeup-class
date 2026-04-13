@@ -1,0 +1,81 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "https://keycloak.code-factory.co.kr/realms/spartahub/protocol/openid-connect/certs"
+          issuer-uri: "https://keycloak.code-factory.co.kr/realms/spartahub"
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - PATCH
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: hub-service
+          uri: lb://hub-service
+          predicates:
+            - Path=/v1/hubs/**
+          filters:
+            - "RewritePath=/v1/hubs(?:/(?<path>.*))?, /\\${path}"
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/v1/users/**
+          filters:
+            - "RewritePath=/v1/users(?:/(?<path>.*))?, /\\${path}"
+
+        - id: store-service
+          uri: lb://store-service
+          predicates:
+            - Path=/v1/stores/**
+          filters:
+            - "RewritePath=/v1/stores(?:/(?<path>.*))?, /\\${path}"
+
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/v1/products/**
+          filters:
+            - "RewritePath=/v1/products(?:/(?<path>.*))?, /\\${path}"
+
+        - id: delivery-service
+          uri: lb://delivery-service
+          predicates:
+            - Path=/v1/deliveries/**
+          filters:
+            - "RewritePath=/v1/deliveries(?:/(?<path>.*))?, /\\${path}"
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /api-docs.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+    doc-expansion: full
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /user-service/v3/api-docs
+        name: USER API
+
+      - url: /hub-service/v3/api-docs
+        name: HUB API

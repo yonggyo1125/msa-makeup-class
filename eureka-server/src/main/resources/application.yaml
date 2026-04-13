@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: eureka-server
+
+---
+# 첫번째 유레카 설정
+spring:
+  config:
+    activate:
+      on-profile: eureka1
+
+server:
+  port: 13101
+
+eureka:
+  instance:
+    hostname: ${hostname1:localhost}
+    prefer-ip-address: false
+  client:
+    register-with-eureka: true # 유레카 서버간에 서로 클라인트로 등록
+    fetch-registry: true # 유레카 서버 서로간에 레지스트리 정보를 공유
+    service-url:
+      defaultZone: http://${hostname2:localhost}:13102/eureka/
+
+---
+# 두번째 유레카 설정
+spring:
+  config:
+    activate:
+      on-profile: eureka2
+
+server:
+  port: 13102
+
+eureka:
+  instance:
+    hostname: ${hostname2:localhost}
+    prefer-ip-address: false
+  client:
+    register-with-eureka: true # 유레카 서버간에 서로 클라인트로 등록
+    fetch-registry: true # 유레카 서버 서로간에 레지스트리 정보를 공유
+    service-url:
+      defaultZone: http://${hostname1:localhost}:13101/eureka/
