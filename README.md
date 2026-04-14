@@ -21,16 +21,16 @@
 ## 3일차
 - Spring Cloud OpenFeign
 - Resilience4j
-- API 게이트웨이
 - 카프카1
 
 ## 4일차
+- API 게이트웨이
 - 카프카2
 - 분산추적
 - Prometheus + Loki + Grafana
 
 ## 5일차
 - Grafana 장애 알림 설정
-- Jmeter를 이용한 부하테스트 
+- JMeter를 이용한 부하테스트 
 - API Gateway 고가용성 확보
 - 마무리
