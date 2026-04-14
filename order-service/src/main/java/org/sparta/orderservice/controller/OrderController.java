@@ -1,5 +1,6 @@
 package org.sparta.orderservice.controller;
 
+import org.sparta.orderservice.client.ProductClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -17,9 +18,12 @@ public class OrderController {
 
     private final RestClient.Builder builder;
 
-    public OrderController(RestTemplate restTemplate, @Qualifier("loadedBalancedRestClient") RestClient.Builder builder) {
+    private final ProductClient productClient;
+
+    public OrderController(RestTemplate restTemplate, @Qualifier("loadedBalancedRestClient") RestClient.Builder builder, ProductClient productClient) {
         this.restTemplate = restTemplate;
         this.builder = builder;
+        this.productClient = productClient;
     }
 
     @Value("${message.test1}")
@@ -46,5 +50,10 @@ public class OrderController {
                 .get()
                 .retrieve()
                 .toEntity(String.class);
+    }
+
+    @GetMapping("/test4")
+    public String test4() {
+        return productClient.getProduct(100);
     }
 }
