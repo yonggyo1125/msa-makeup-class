@@ -1,5 +1,9 @@
 # MSA 보충 세션
 
+## 강의자료
+- [MSA 구성 가이드](https://www.notion.so/MSA-27cf20789cb180a6b2d2c888e5f6facc?source=copy_link)
+- [MSA 보충 세션 동영상](https://www.notion.so/MSA-33ef20789cb18053a0cee29674d7e197?source=copy_link)
+
 ## 1일차 
 - 마이크로서비스 아키텍처로 진화
 - 모놀리스 아키텍처의 특징
