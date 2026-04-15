@@ -1,0 +1,29 @@
+global:
+  # 타겟으로부터의 수집 주기
+  scrape_interval: 5s
+  # rule evaluation 주기 (prometheus 는 rule 을 통해 time series 를 만들고 alert 를 생성한다.)
+  evaluation_interval: 5s
+
+# target별로 범주들을 묶고, 범주별로 수집 주기나 룰들을 유동적으로 설정
+scrape_configs:
+  - job_name: 'msa-service'
+    #scheme: https
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      # actuator 요청을 보낼 위치 (ex : ['192.168.0.3:9090']), metrics_path 와 결합합니다.
+      - targets: ['192.168.1.29:13100']
+        labels:
+          # 인스턴스 이름 지정
+          instance: 'config-server'
+      - targets: ['192.168.1.29:13101']
+        labels:
+          instance: 'eureka-server'
+      - targets: ['192.168.1.29:10006']
+        labels:
+          instance: 'order-service'
+      - targets: ['192.168.1.29:10004']
+        labels:
+          instance: 'product-service'
+      - targets: ['192.168.1.29:8080']
+        labels:
+          instance: 'gateway-server'

@@ -1,0 +1,63 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: zipkin-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD:  '_aA123456'
+      MYSQL_DATABASE: zipkin
+      MYSQL_USER: zipkin
+      MYSQL_PASSWORD: '_aA123456'
+    ports:
+      - '3307:3306'
+    volumes:
+      - zipkin_mysql_data:/var/lib/mysql
+      - ./mysql.sql:/docker-entrypoint-initdb.d/mysql.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "zipkin", "-p_aA123456"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - monitoring-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      JAVA_OPTS: -Xms512m -Xmx512m
+      STORAGE_TYPE: mysql
+      MYSQL_HOST: mysql
+      MYSQL_TCP_PORT: 3306
+      MYSQL_DATABASE: zipkin
+      MYSQL_USER: zipkin
+      MYSQL_PASS: '_aA123456'
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - monitoring-network
+
+  zipkin-dependencies:
+    image: openzipkin/zipkin-dependencies
+    container_name: zipkin-dependencies
+    entrypoint: crond -f -d 8
+    environment:
+      STORAGE_TYPE: mysql
+      MYSQL_HOST: zipkin-mysql
+      MYSQL_TCP_PORT: 3306
+      MYSQL_DATABASE: zipkin
+      MYSQL_USER: zipkin
+      MYSQL_PASS: '_aA123456'
+    networks:
+      - monitoring-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+volumes:
+  zipkin_mysql_data:
+
+networks:
+  monitoring-network:

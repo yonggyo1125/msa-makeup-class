@@ -1,0 +1,50 @@
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    restart: always
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - '4101:9090'
+    user: root
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - monitoring-network
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    restart: always
+    ports:
+      - '4100:3000'
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    user: root
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - monitoring-network
+  
+  loki:
+    container_name: loki
+    image: grafana/loki
+    restart: always
+    ports: 
+      - '4102:3100'
+    command: -config.file=/etc/loki/loki-config.yaml  
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yaml
+      - ./data/loki:/loki
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  monitoring-network:
+    driver: bridge
