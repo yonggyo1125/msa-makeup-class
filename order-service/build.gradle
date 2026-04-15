@@ -37,6 +37,8 @@ dependencies {
     implementation 'io.github.resilience4j:resilience4j-bulkhead'
     implementation 'io.github.resilience4j:resilience4j-ratelimiter'
 
+    implementation 'org.springframework.boot:spring-boot-starter-kafka'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
